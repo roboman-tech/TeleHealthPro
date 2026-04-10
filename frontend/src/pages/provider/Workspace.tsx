@@ -404,7 +404,7 @@ export function ProviderWorkspace() {
                           className="rounded-lg bg-teal-400/15 px-3 py-2 text-sm font-semibold text-teal-100 hover:bg-teal-400/20"
                           onClick={() => loadClinical.mutate(selectedRow.patientId)}
                         >
-                          Load Clinical Data
+                          Load Clinical Data from FHIR Server.
                         </button>
                       }
                     />
@@ -550,7 +550,7 @@ export function ProviderWorkspace() {
                 disabled={!selectedRow || loadClinical.isPending}
                 onClick={() => selectedRow && loadClinical.mutate(selectedRow.patientId)}
               >
-                {loadClinical.isPending ? 'Loading…' : 'Load Clinical Data'}
+                {loadClinical.isPending ? 'Loading…' : 'Load Clinical Data from FHIR Server.'}
               </button>
               <button
                 className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-white/[0.06] disabled:opacity-50"

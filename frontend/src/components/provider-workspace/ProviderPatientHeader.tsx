@@ -57,7 +57,7 @@ export function ProviderPatientHeader({
             onClick={onLoadClinical}
             disabled={loadingClinical}
           >
-            {loadingClinical ? 'Loading…' : 'Load Clinical Data'}
+            {loadingClinical ? 'Loading…' : 'Load Clinical Data from FHIR Server.'}
           </button>
           <button
             className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-white/[0.06]"

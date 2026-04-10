@@ -239,7 +239,7 @@ export function ProviderPatients() {
                   onClick={() => loadClinicalForOpenPatient.mutate()}
                   disabled={!token || loadClinicalForOpenPatient.isPending || openId == null}
                 >
-                  {loadClinicalForOpenPatient.isPending ? 'Loading…' : 'Load clinical data'}
+                  {loadClinicalForOpenPatient.isPending ? 'Loading…' : 'Load Clinical Data from FHIR Server.'}
                 </Button>
                 <span className="th-meta">
                   Clinical data is only visible after explicit fetch (FHIR-style workflow).
