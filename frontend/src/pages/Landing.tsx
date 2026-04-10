@@ -1,13 +1,24 @@
 import { Link } from 'react-router-dom'
 import { Button, Card } from '../components/ui'
 
+function MedicalCross({ size = 18 }: { size?: number }) {
+  const arm = size * 0.28
+  const center = size / 2
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden focusable="false">
+      <rect x={center - arm / 2} y={1} width={arm} height={size - 2} rx={arm * 0.4} fill="var(--medical-red)" />
+      <rect x={1} y={center - arm / 2} width={size - 2} height={arm} rx={arm * 0.4} fill="var(--medical-red)" />
+    </svg>
+  )
+}
+
 export function Landing() {
   return (
     <div className="th-landing">
       <div className="th-aurora" aria-hidden />
       <header className="th-landing-head">
         <div className="th-brand-inline">
-          <span className="th-brand-mark" />
+          <span className="th-brand-mark" aria-hidden><MedicalCross size={20} /></span>
           <span>TeleHealthPro</span>
         </div>
         <div className="th-landing-actions">

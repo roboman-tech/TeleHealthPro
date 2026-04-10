@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { appointmentsApi, telehealthApi } from '../../api/client'
 import type { Appointment, AppointmentStatus, TelehealthSession } from '../../api/types'
 import { useAuth } from '../../auth/AuthContext'
+import { DateScheduleInput } from '../../components/DateScheduleInput'
 import { Badge, Button } from '../../components/ui'
 import { PageTitle } from '../../components/ui'
 import { toDatetimeLocalValue } from '../../utils/datetimeLocal'
@@ -41,11 +42,21 @@ function ProviderRescheduleEditor({ a, token }: { a: Appointment; token: string 
       <div className="th-form-row">
         <label>
           Start
-          <input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} />
+          <DateScheduleInput
+            inputType="datetime-local"
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+            wrapClassName="mt-2"
+          />
         </label>
         <label>
           End
-          <input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} />
+          <DateScheduleInput
+            inputType="datetime-local"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+            wrapClassName="mt-2"
+          />
         </label>
       </div>
       <div className="th-form-row">
@@ -131,6 +142,24 @@ function providerRowHasActions(a: Appointment, sess: TelehealthSession | undefin
   )
 }
 
+const STATUS_FILTER_OPTIONS: { value: 'all' | AppointmentStatus; label: string }[] = [
+  { value: 'all', label: 'All visits' },
+  { value: 'pending', label: 'Pending approval' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'in_progress', label: 'In session' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'reschedule_requested', label: 'Reschedule' },
+  { value: 'no_show', label: 'No-show' },
+]
+
+function statusFilterChipClass(active: boolean): string {
+  return active
+    ? 'border-teal-300/35 bg-teal-400/12 text-teal-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+    : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/18 hover:bg-white/[0.06] hover:text-slate-100'
+}
+
 export function ProviderAppointments() {
   const { token } = useAuth()
   const qc = useQueryClient()
@@ -185,24 +214,31 @@ export function ProviderAppointments() {
         title="Appointments"
         subtitle="Session history opens the telehealth room log when a room exists; for completed visits without a room, that control is shown disabled."
       />
-      <div className="th-form-row th-mb">
-        <label>
-          Filter by status
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as 'all' | AppointmentStatus)}
-          >
-            <option value="all">All</option>
-            <option value="pending">pending</option>
-            <option value="approved">approved</option>
-            <option value="in_progress">in_progress</option>
-            <option value="completed">completed</option>
-            <option value="cancelled">cancelled</option>
-            <option value="rejected">rejected</option>
-            <option value="reschedule_requested">reschedule_requested</option>
-            <option value="no_show">no_show</option>
-          </select>
-        </label>
+      <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Filter by status</div>
+            <p className="mt-0.5 text-xs text-slate-500">Tap a category to narrow the schedule; counts update instantly.</p>
+          </div>
+          <span className="rounded-lg border border-white/10 bg-black/25 px-2.5 py-1 text-xs font-medium text-slate-300">
+            {filtered.length} shown
+          </span>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Appointment status filter">
+          {STATUS_FILTER_OPTIONS.map(({ value, label }) => {
+            const active = statusFilter === value
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setStatusFilter(value)}
+                className={`rounded-full border px-3.5 py-2 text-xs font-semibold transition ${statusFilterChipClass(active)}`}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
       </div>
       <div className="th-table-wrap">
         <table className="th-table">

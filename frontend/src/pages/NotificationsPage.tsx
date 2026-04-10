@@ -88,18 +88,43 @@ export function NotificationsPage() {
         title="Notifications"
         subtitle="Appointment and telehealth alerts are saved here when you are offline or dismiss toasts."
       />
-      <Card className="th-mb th-notification-toolbar">
-        <label className="th-notification-filter">
-          <input
-            type="checkbox"
-            checked={unreadOnly}
-            onChange={(e) => setUnreadOnly(e.target.checked)}
-          />
-          Unread only
-        </label>
-        <Button variant="ghost" type="button" disabled={markAll.isPending} onClick={() => markAll.mutate()}>
-          Mark all read
-        </Button>
+      <Card className="th-mb overflow-hidden border-white/10 bg-white/[0.03] p-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <div className="th-notification-toolbar flex-wrap items-stretch gap-4 px-4 py-3.5 sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-1 items-center gap-4">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={unreadOnly}
+              aria-label="Filter to unread notifications only"
+              onClick={() => setUnreadOnly((v) => !v)}
+              className={`relative h-9 w-14 shrink-0 cursor-pointer rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1428] ${
+                unreadOnly
+                  ? 'border-teal-400/35 bg-teal-500/25 shadow-[0_0_20px_rgba(45,212,191,0.12)]'
+                  : 'border-white/12 bg-black/30 hover:border-white/20 hover:bg-white/[0.05]'
+              }`}
+            >
+              <span
+                className={`pointer-events-none absolute top-1 left-1 h-7 w-7 rounded-full bg-gradient-to-b from-white to-slate-200 shadow-md ring-1 ring-black/15 transition-transform duration-200 ease-out ${
+                  unreadOnly ? 'translate-x-5' : 'translate-x-0'
+                }`}
+                aria-hidden
+              />
+            </button>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-slate-100">Unread only</div>
+              <p className="mt-0.5 text-xs leading-snug text-slate-500">
+                {unreadOnly
+                  ? 'Showing messages you have not marked as read.'
+                  : 'Include read messages in the list below.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center border-t border-white/10 pt-3 sm:border-t-0 sm:border-l sm:pl-4 sm:pt-0">
+            <Button variant="ghost" type="button" disabled={markAll.isPending} onClick={() => markAll.mutate()}>
+              Mark all read
+            </Button>
+          </div>
+        </div>
       </Card>
       {isLoading ? <p className="th-muted">Loading…</p> : null}
       <ul className="th-notification-list">

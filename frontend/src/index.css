@@ -1,28 +1,44 @@
-/* TeleHealthPro — aurora clinical theme */
+/* TeleHealthPro — clinical refined dark theme */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-void: #050810;
-  --bg-deep: #0a1020;
-  --bg-panel: rgba(255, 255, 255, 0.035);
-  --bg-panel-strong: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-glow: rgba(45, 212, 191, 0.35);
-  --text: #e8edf7;
-  --text-muted: #8b9bb5;
-  --accent: #2dd4bf;
-  --accent-dim: rgba(45, 212, 191, 0.15);
-  --accent-2: #38bdf8;
-  --accent-3: #fb923c;
-  --danger: #f87171;
+  /* ── Backgrounds ─────────────────────────────── */
+  --bg-void: #07111f;           /* warmer, less harsh than pure black */
+  --bg-deep: #0c1a2e;           /* navy-blue deep panels */
+  --bg-panel: rgba(255, 255, 255, 0.048);
+  --bg-panel-strong: rgba(255, 255, 255, 0.085);
+  --bg-input: rgba(0, 0, 0, 0.32);
+
+  /* ── Borders ─────────────────────────────────── */
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.17);
+  --border-glow: rgba(45, 212, 191, 0.38);
+
+  /* ── Typography ──────────────────────────────── */
+  --text: #ddeaf8;              /* soft blue-white — easier on eyes than pure white */
+  --text-muted: #7a9bbf;        /* muted blue-gray */
+  --text-on-accent: #041a14;
+
+  /* ── Clinical accents ────────────────────────── */
+  --accent: #2dd4bf;            /* teal-400 */
+  --accent-dim: rgba(45, 212, 191, 0.14);
+  --accent-hover: #0f766e;
+  --accent-2: #38bdf8;          /* sky-400 */
+  --accent-3: #fb923c;          /* orange-400 */
+  --danger: #f87171;            /* red-400 */
+  --medical-red: #fb4472;       /* rose — healthcare cross (bright on dark) */
+  --medical-red-dim: rgba(251, 68, 114, 0.14);
+
+  /* ── Design system ───────────────────────────── */
   --radius: 18px;
   --radius-sm: 10px;
   --font: 'DM Sans', system-ui, sans-serif;
   --font-display: 'Fraunces', Georgia, serif;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.38);
 }
 
 *,
@@ -53,9 +69,10 @@ body::before {
   z-index: -3;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 50% at 15% 0%, rgba(45, 212, 191, 0.09), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 90% 20%, rgba(56, 189, 248, 0.07), transparent 50%),
-    linear-gradient(180deg, #050810, #0c1428);
+    radial-gradient(ellipse 80% 50% at 12% 0%, rgba(45, 212, 191, 0.09), transparent 55%),
+    radial-gradient(ellipse 65% 45% at 88% 18%, rgba(56, 189, 248, 0.07), transparent 50%),
+    radial-gradient(ellipse 50% 38% at 55% 95%, rgba(251, 68, 114, 0.05), transparent 50%),
+    linear-gradient(180deg, #07111f, #0d1f38);
 }
 
 #root {
@@ -100,21 +117,139 @@ body::before {
   line-height: 1.65;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.38);
+  background: rgba(0, 0, 0, 0.3);
   color: var(--text);
   resize: vertical;
   font-family: var(--font);
 }
 
 .th-patient-narrative:focus {
-  outline: 2px solid rgba(45, 212, 191, 0.45);
+  outline: 2px solid rgba(45, 212, 191, 0.4);
   outline-offset: 2px;
-  border-color: rgba(45, 212, 191, 0.35);
+  border-color: rgba(45, 212, 191, 0.45);
 }
 
 .th-patient-narrative::placeholder {
   color: var(--text-muted);
   opacity: 0.85;
+}
+
+/* Date / datetime-local — calendar card shell + native picker (dark clinical UI) */
+.th-date-schedule-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.30);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.th-date-schedule-monthstrip {
+  flex-shrink: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0f766e 0%, var(--accent) 55%, rgba(45, 212, 191, 0.35) 100%);
+}
+
+.th-date-schedule-monthstrip--time {
+  background: linear-gradient(90deg, #0c4a6e 0%, #0891b2 45%, var(--accent) 100%);
+}
+
+.th-date-schedule-inner {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-height: 2.625rem;
+}
+
+.th-date-schedule-wrap:focus-within {
+  border-color: rgba(45, 212, 191, 0.45);
+  box-shadow:
+    0 0 0 2px rgba(45, 212, 191, 0.16),
+    var(--shadow-card);
+}
+
+.th-date-schedule-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.875rem;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-right: 1px solid var(--border);
+  color: var(--accent);
+  /* button element resets */
+  padding: 0;
+  margin: 0;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+}
+
+.th-date-schedule-icon:hover {
+  background: rgba(45, 212, 191, 0.13);
+  color: #5eead4;
+}
+
+.th-date-schedule-field {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0.62rem 0.85rem;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--text);
+  color-scheme: dark;
+}
+
+.th-date-schedule-field::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.th-date-schedule-field:focus {
+  outline: none;
+}
+
+.th-date-schedule-field::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  filter: invert(1) brightness(1.1);
+  padding: 0.2rem;
+  margin-left: 0.15rem;
+  border-radius: 4px;
+}
+
+.th-date-schedule-field::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background: rgba(45, 212, 191, 0.15);
+}
+
+/* Card/form input chrome would fight the schedule shell — keep one visual system */
+.th-card .th-date-schedule-wrap input.th-date-schedule-field,
+.th-form .th-date-schedule-wrap input.th-date-schedule-field {
+  margin-top: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0.62rem 0.85rem;
+}
+
+.th-card .th-date-schedule-wrap input.th-date-schedule-field:focus-visible,
+.th-form .th-date-schedule-wrap input.th-date-schedule-field:focus-visible {
+  outline: none;
 }
 
 .th-actions-none {
@@ -164,12 +299,24 @@ h3 {
 }
 
 .th-kicker {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--accent);
+  color: var(--medical-red);
   margin-bottom: 0.35rem;
+}
+
+.th-kicker::before {
+  content: '+';
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--medical-red);
+  letter-spacing: 0;
 }
 
 .th-page-head h1 {
@@ -190,9 +337,9 @@ h3 {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(45, 212, 191, 0.14), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 80% 30%, rgba(56, 189, 248, 0.12), transparent 50%),
-    radial-gradient(ellipse 60% 40% at 50% 90%, rgba(251, 146, 60, 0.08), transparent 45%),
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(13, 148, 136, 0.09), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 80% 25%, rgba(2, 132, 199, 0.07), transparent 50%),
+    radial-gradient(ellipse 55% 40% at 55% 90%, rgba(225, 29, 72, 0.05), transparent 50%),
     linear-gradient(180deg, var(--bg-void), var(--bg-deep));
   pointer-events: none;
 }
@@ -229,11 +376,16 @@ h3 {
 }
 
 .th-brand-mark {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 11px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 32px var(--border-glow);
+  background: var(--medical-red-dim);
+  border: 1.5px solid rgba(225, 29, 72, 0.22);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.12);
 }
 
 .th-landing-actions {
@@ -325,7 +477,7 @@ h3 {
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.38);
   color: var(--text);
   font: inherit;
   line-height: 1.4;
@@ -380,8 +532,8 @@ h3 {
   flex-direction: column;
   padding: 1.5rem 1rem;
   border-right: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
 }
 
 .th-brand {
@@ -431,7 +583,8 @@ h3 {
 .th-navlink--active {
   background: var(--accent-dim);
   color: var(--accent);
-  border: 1px solid rgba(45, 212, 191, 0.25);
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  font-weight: 600;
 }
 
 .th-nav-ico {
@@ -452,15 +605,15 @@ h3 {
   min-width: 1.15rem;
   padding: 0.12rem 0.38rem;
   border-radius: 999px;
-  background: var(--accent-3);
-  color: #0c0a08;
+  background: var(--medical-red);
+  color: #ffffff;
   font-weight: 700;
   line-height: 1.15;
   text-align: center;
 }
 
 .th-side-foot {
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--border);
   padding-top: 1rem;
 }
 
@@ -476,12 +629,14 @@ h3 {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
 }
 
 .th-user-name {
@@ -509,7 +664,7 @@ h3 {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, transparent, rgba(5, 8, 16, 0.6));
+  background: linear-gradient(180deg, transparent, rgba(4, 11, 22, 0.55));
   pointer-events: none;
 }
 
@@ -519,12 +674,12 @@ h3 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem 1.35rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-card);
 }
 
 .th-card--glow {
-  border-color: rgba(45, 212, 191, 0.2);
-  box-shadow: var(--shadow), 0 0 0 1px rgba(45, 212, 191, 0.08);
+  border-color: rgba(45, 212, 191, 0.22);
+  box-shadow: var(--shadow-card), 0 0 0 1px rgba(45, 212, 191, 0.09);
 }
 
 /* Healthcare-friendly blocks */
@@ -547,7 +702,7 @@ h3 {
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.5) rgba(255, 255, 255, 0.06);
+  scrollbar-color: rgba(148, 163, 184, 0.45) rgba(255, 255, 255, 0.05);
 }
 
 .th-clinical-sidebar-scroll::-webkit-scrollbar {
@@ -555,18 +710,18 @@ h3 {
 }
 
 .th-clinical-sidebar-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 4px;
   margin: 4px 0;
 }
 
 .th-clinical-sidebar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.45);
+  background: rgba(148, 163, 184, 0.4);
   border-radius: 4px;
 }
 
 .th-clinical-sidebar-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.65);
+  background: rgba(148, 163, 184, 0.62);
 }
 
 .th-clinical-card-title {
@@ -616,11 +771,138 @@ h3 {
   color: var(--text-muted);
 }
 
+/* FHIR Patient ID + Fetch — one control height end-to-end */
+.th-fhir-fetch-bar {
+  --th-fhir-fetch-h: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.th-fhir-fetch-bar:focus-within {
+  border-color: rgba(45, 212, 191, 0.38);
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.18), var(--shadow-card);
+}
+
+@media (min-width: 640px) {
+  .th-fhir-fetch-bar {
+    --th-fhir-fetch-h: 52px;
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+/* Reset .th-card / .th-form input chrome so field height matches .th-fhir-fetch-bar__btn */
+.th-card .th-fhir-fetch-bar input.th-fhir-fetch-bar__input,
+.th-form .th-fhir-fetch-bar input.th-fhir-fetch-bar__input {
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  box-sizing: border-box;
+  min-height: var(--th-fhir-fetch-h);
+  height: var(--th-fhir-fetch-h);
+  min-width: 0;
+  width: 100%;
+  flex: 1;
+  padding: 0 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: var(--th-fhir-fetch-h);
+  color: var(--text);
+}
+
+.th-card .th-fhir-fetch-bar input.th-fhir-fetch-bar__input:focus-visible,
+.th-form .th-fhir-fetch-bar input.th-fhir-fetch-bar__input:focus-visible {
+  outline: none;
+}
+
+.th-fhir-fetch-bar__input {
+  box-sizing: border-box;
+  min-height: var(--th-fhir-fetch-h);
+  height: var(--th-fhir-fetch-h);
+  min-width: 0;
+  width: 100%;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 0 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: var(--th-fhir-fetch-h);
+  color: var(--text);
+}
+
+.th-fhir-fetch-bar__input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.th-fhir-fetch-bar__input:focus {
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  .th-fhir-fetch-bar__input {
+    border-right: 1px solid rgba(255, 255, 255, 0.10);
+  }
+}
+
+.th-fhir-fetch-bar .th-btn.th-fhir-fetch-bar__btn {
+  margin: 0;
+  min-height: var(--th-fhir-fetch-h);
+  height: var(--th-fhir-fetch-h);
+  width: 100%;
+  border-radius: 0;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: none;
+  flex-shrink: 0;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.th-fhir-fetch-bar .th-btn.th-fhir-fetch-bar__btn:hover:not(:disabled) {
+  transform: none;
+}
+
+.th-fhir-fetch-bar .th-btn.th-fhir-fetch-bar__btn:disabled {
+  opacity: 0.45;
+}
+
+@media (min-width: 640px) {
+  .th-fhir-fetch-bar .th-btn.th-fhir-fetch-bar__btn {
+    width: auto;
+    min-width: 9.5rem;
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.10);
+    padding-left: 1.35rem;
+    padding-right: 1.35rem;
+  }
+}
+
+.th-card label .th-fhir-fetch-bar {
+  margin-top: 0.35rem;
+}
+
 .th-fhir-frame {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.75rem 0.85rem;
-  background: linear-gradient(180deg, rgba(45, 212, 191, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(45, 212, 191, 0.06), rgba(255, 255, 255, 0.01));
 }
 
 .th-btn {
@@ -640,12 +922,12 @@ h3 {
 }
 
 .th-btn--primary {
-  background: linear-gradient(135deg, var(--accent), #14b8a6);
-  color: #04120f;
+  background: linear-gradient(135deg, var(--accent), #0f9688);
+  color: #041a14;
 }
 .th-btn--primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(45, 212, 191, 0.25);
+  box-shadow: 0 8px 24px rgba(45, 212, 191, 0.28);
 }
 
 .th-btn--accent {
@@ -654,6 +936,7 @@ h3 {
 }
 .th-btn--accent:hover:not(:disabled) {
   transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.28);
 }
 
 .th-btn--ghost {
@@ -663,13 +946,17 @@ h3 {
 }
 .th-btn--ghost:hover:not(:disabled) {
   color: var(--text);
+  background: var(--bg-panel-strong);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
 .th-btn--danger {
-  background: rgba(248, 113, 113, 0.15);
-  color: #fecaca;
-  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+.th-btn--danger:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.22);
 }
 
 .th-btn-block {
@@ -690,24 +977,29 @@ h3 {
 }
 
 .th-badge--ok {
-  background: rgba(45, 212, 191, 0.15);
+  background: rgba(45, 212, 191, 0.14);
   color: var(--accent);
+  border: 1px solid rgba(45, 212, 191, 0.22);
 }
 .th-badge--warn {
-  background: rgba(251, 146, 60, 0.15);
+  background: rgba(251, 146, 60, 0.14);
   color: #fdba74;
+  border: 1px solid rgba(251, 146, 60, 0.22);
 }
 .th-badge--bad {
   background: rgba(248, 113, 113, 0.12);
-  color: #fecaca;
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.22);
 }
 .th-badge--neutral {
   background: var(--bg-panel-strong);
   color: var(--text-muted);
+  border: 1px solid var(--border);
 }
 .th-badge--info {
   background: rgba(56, 189, 248, 0.12);
   color: var(--accent-2);
+  border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
 .th-stat-row {
@@ -729,6 +1021,7 @@ h3 {
   font-size: 2rem;
   font-family: var(--font-display);
   color: var(--accent);
+  font-weight: 700;
 }
 
 .th-stat-hint {
@@ -770,12 +1063,13 @@ h3 {
 .th-json {
   font-size: 0.78rem;
   line-height: 1.45;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.42);
   border-radius: var(--radius-sm);
   padding: 1rem;
   overflow: auto;
   max-height: 280px;
   border: 1px solid var(--border);
+  color: var(--text);
 }
 
 .th-json--tall {
@@ -805,6 +1099,7 @@ h3 {
   border: 1px solid var(--border);
   background: var(--bg-panel);
   margin-top: 1rem;
+  box-shadow: var(--shadow-card);
 }
 
 .th-table {
@@ -959,6 +1254,7 @@ h3 {
   color: var(--text-muted);
   font: inherit;
   cursor: pointer;
+  transition: background 0.13s, color 0.13s;
 }
 
 .th-list-nav li button:hover {
@@ -1034,10 +1330,11 @@ h3 {
   align-items: flex-start;
   padding: 0.9rem 1rem;
   border-radius: var(--radius-sm);
-  background: rgba(10, 16, 32, 0.92);
-  border: 1px solid rgba(45, 212, 191, 0.35);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 20, 40, 0.95);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
   animation: th-toast-in 0.35s ease-out;
 }
 
@@ -1075,6 +1372,7 @@ h3 {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
+  font-weight: 700;
   margin-bottom: 0.2rem;
 }
 
@@ -1104,9 +1402,9 @@ h3 {
 .th-meeting-alarm {
   flex-shrink: 0;
   padding: 0.65rem 1rem;
-  background: rgba(251, 146, 60, 0.15);
-  border-bottom: 1px solid rgba(251, 146, 60, 0.45);
-  color: #fdba74;
+  background: rgba(234, 88, 12, 0.2);
+  border-bottom: 1px solid rgba(234, 88, 12, 0.45);
+  color: #fed7aa;
   font-size: 0.85rem;
   line-height: 1.45;
 }
@@ -1123,7 +1421,7 @@ h3 {
   gap: 0.75rem 1rem;
   padding: 0.65rem 1rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(5, 8, 16, 0.85);
+  background: rgba(5, 10, 22, 0.88);
   backdrop-filter: blur(8px);
 }
 
@@ -1165,7 +1463,7 @@ h3 {
   flex-direction: column;
   min-height: 0;
   border-left: 1px solid var(--border);
-  background: var(--bg-void);
+  background: var(--bg-deep);
 }
 
 .th-meeting-chat-title {
@@ -1363,15 +1661,6 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.th-notification-filter {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  cursor: pointer;
 }
 
 .th-notification-list {

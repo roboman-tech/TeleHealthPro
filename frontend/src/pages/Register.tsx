@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { DateScheduleInput } from '../components/DateScheduleInput'
 import { Button, Card } from '../components/ui'
 
 export function Register() {
@@ -57,11 +58,12 @@ export function Register() {
             <>
               <label>
                 Date of birth
-                <input
-                  type="date"
+                <DateScheduleInput
+                  inputType="date"
                   value={dateOfBirth}
                   onChange={(e) => setDateOfBirth(e.target.value)}
                   required
+                  wrapClassName="mt-2"
                 />
               </label>
               <label>

@@ -127,14 +127,38 @@ export function ProviderPatients() {
         <p className="th-sub">
           Enter a FHIR Patient ID and fetch. Medical history and lab notes will populate in both the FHIR view and the patient panel.
         </p>
+        <label htmlFor="provider-patients-fhir-id">
+          FHIR Patient ID
+          <div className="th-fhir-fetch-bar">
+            <input
+              id="provider-patients-fhir-id"
+              value={fhirId}
+              onChange={(e) => setFhirId(e.target.value)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === 'Enter' &&
+                  token &&
+                  fhirId.trim() &&
+                  !fetchFhirPatient.isPending
+                ) {
+                  fetchFhirPatient.mutate()
+                }
+              }}
+              placeholder="e.g. pat-a1b2c3d4e5f6"
+              className="th-fhir-fetch-bar__input"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <Button
+              className="th-fhir-fetch-bar__btn"
+              onClick={() => fetchFhirPatient.mutate()}
+              disabled={!token || fetchFhirPatient.isPending || !fhirId.trim()}
+            >
+              {fetchFhirPatient.isPending ? 'Syncing…' : 'Fetch Patient'}
+            </Button>
+          </div>
+        </label>
         <div className="th-form-row">
-          <label>
-            FHIR Patient ID
-            <input value={fhirId} onChange={(e) => setFhirId(e.target.value)} placeholder="FHIR Patient ID" />
-          </label>
-          <Button onClick={() => fetchFhirPatient.mutate()} disabled={!token || fetchFhirPatient.isPending || !fhirId.trim()}>
-            {fetchFhirPatient.isPending ? 'Syncing…' : 'Fetch Patient'}
-          </Button>
           <Button onClick={() => fetchAllPatients.mutate()} disabled={!token || fetchAllPatients.isPending} variant="ghost">
             {fetchAllPatients.isPending ? 'Loading…' : 'Fetch All Patients'}
           </Button>

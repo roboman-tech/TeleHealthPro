@@ -4,6 +4,37 @@ import { notificationsApi } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 import { Button } from './ui'
 
+function MedicalCross({ size = 18 }: { size?: number }) {
+  const arm = size * 0.28
+  const center = size / 2
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      aria-hidden
+      focusable="false"
+    >
+      <rect
+        x={center - arm / 2}
+        y={1}
+        width={arm}
+        height={size - 2}
+        rx={arm * 0.4}
+        fill="var(--medical-red)"
+      />
+      <rect
+        x={1}
+        y={center - arm / 2}
+        width={size - 2}
+        height={arm}
+        rx={arm * 0.4}
+        fill="var(--medical-red)"
+      />
+    </svg>
+  )
+}
+
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `th-navlink ${isActive ? 'th-navlink--active' : ''}`.trim()
 
@@ -31,7 +62,9 @@ export function AppShell({
     <div className="th-shell">
       <aside className="th-sidebar">
         <div className="th-brand">
-          <span className="th-brand-mark" aria-hidden />
+          <span className="th-brand-mark" aria-hidden>
+            <MedicalCross size={20} />
+          </span>
           <div>
             <strong>TeleHealthPro</strong>
             <span className="th-brand-sub">{kicker}</span>

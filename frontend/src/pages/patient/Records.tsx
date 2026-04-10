@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { clinicalApi, recordsApi } from '../../api/client'
 import { useAuth } from '../../auth/AuthContext'
+import { DateScheduleInput } from '../../components/DateScheduleInput'
 import { Button, Card } from '../../components/ui'
 import { PageTitle } from '../../components/ui'
 import { minDelay } from '../../utils/minDelay'
@@ -91,10 +92,11 @@ export function PatientRecords() {
           </label>
           <label>
             Date of birth (optional)
-            <input
-              type="date"
+            <DateScheduleInput
+              inputType="date"
               value={demographics.date_of_birth}
               onChange={(e) => setDemographics({ ...demographics, date_of_birth: e.target.value })}
+              wrapClassName="mt-2"
             />
           </label>
           <label>
@@ -199,10 +201,11 @@ export function PatientRecords() {
           </label>
           <label>
             Date of birth
-            <input
-              type="date"
+            <DateScheduleInput
+              inputType="date"
               value={demographics.date_of_birth || demoDob}
               onChange={(e) => setDemographics({ ...demographics, date_of_birth: e.target.value })}
+              wrapClassName="mt-2"
             />
           </label>
           <label>

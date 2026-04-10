@@ -3,6 +3,7 @@ import { Fragment, useMemo, useState } from 'react'
 import { appointmentsApi, providersApi } from '../../api/client'
 import type { AppointmentStatus } from '../../api/types'
 import { useAuth } from '../../auth/AuthContext'
+import { DateScheduleInput } from '../../components/DateScheduleInput'
 import { Badge, Button, Card } from '../../components/ui'
 import { PageTitle } from '../../components/ui'
 import { toDatetimeLocalValue } from '../../utils/datetimeLocal'
@@ -217,11 +218,21 @@ export function PatientAppointments() {
           </label>
           <label>
             Start
-            <input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} />
+            <DateScheduleInput
+              inputType="datetime-local"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+              wrapClassName="mt-2"
+            />
           </label>
           <label>
             End
-            <input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} />
+            <DateScheduleInput
+              inputType="datetime-local"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+              wrapClassName="mt-2"
+            />
           </label>
         </div>
         {providerId !== '' ? (
@@ -407,22 +418,24 @@ export function PatientAppointments() {
                         <div className="th-form-row">
                           <label>
                             Start
-                            <input
-                              type="datetime-local"
+                            <DateScheduleInput
+                              inputType="datetime-local"
                               value={rescheduleDraft.start}
                               onChange={(e) =>
                                 setRescheduleDraft((d) => (d ? { ...d, start: e.target.value } : d))
                               }
+                              wrapClassName="mt-2"
                             />
                           </label>
                           <label>
                             End
-                            <input
-                              type="datetime-local"
+                            <DateScheduleInput
+                              inputType="datetime-local"
                               value={rescheduleDraft.end}
                               onChange={(e) =>
                                 setRescheduleDraft((d) => (d ? { ...d, end: e.target.value } : d))
                               }
+                              wrapClassName="mt-2"
                             />
                           </label>
                         </div>
@@ -464,22 +477,24 @@ export function PatientAppointments() {
                         <div className="th-form-row">
                           <label>
                             Start
-                            <input
-                              type="datetime-local"
+                            <DateScheduleInput
+                              inputType="datetime-local"
                               value={reviseDraft.start}
                               onChange={(e) =>
                                 setReviseDraft((d) => (d ? { ...d, start: e.target.value } : d))
                               }
+                              wrapClassName="mt-2"
                             />
                           </label>
                           <label>
                             End
-                            <input
-                              type="datetime-local"
+                            <DateScheduleInput
+                              inputType="datetime-local"
                               value={reviseDraft.end}
                               onChange={(e) =>
                                 setReviseDraft((d) => (d ? { ...d, end: e.target.value } : d))
                               }
+                              wrapClassName="mt-2"
                             />
                           </label>
                         </div>
