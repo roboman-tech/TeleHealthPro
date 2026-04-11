@@ -11,7 +11,13 @@ export function apiBase(): string {
     return String(raw).replace(/\/$/, '')
   }
   if (import.meta.env.DEV) return ''
-  return 'http://localhost:8000'
+  // Production split deploy (e.g. Vercel SPA + API on another host): set VITE_API_URL in the Vercel env.
+  if (import.meta.env.PROD) {
+    console.warn(
+      '[TeleHealthPro] VITE_API_URL is unset. Set it to your API origin (e.g. https://healthcareapi.culturemind.org).',
+    )
+  }
+  return ''
 }
 
 /** Host + TLS for WebSocket URLs (matches apiBase() same-origin dev behavior). */

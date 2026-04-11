@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import get_settings
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.patient_record import PatientRecord
@@ -84,12 +85,16 @@ async def login(body: UserLogin, response: Response, db: AsyncSession = Depends(
         ),
     )
     await db.flush()
+    settings = get_settings()
+    same_site = settings.session_cookie_same_site
+    # Browsers require Secure when SameSite=None.
+    secure = settings.session_cookie_secure or (same_site == "none")
     response.set_cookie(
         key=SESSION_COOKIE_NAME,
         value=session_token,
         httponly=True,
-        samesite="lax",
-        secure=False,
+        samesite=same_site,
+        secure=secure,
         path="/",
         max_age=60 * 60 * 24 * 7,
     )
@@ -110,10 +115,18 @@ async def logout(
     db: AsyncSession = Depends(get_db),
 ) -> None:
     del current
+    settings = get_settings()
+    same_site = settings.session_cookie_same_site
+    secure = settings.session_cookie_secure or (same_site == "none")
     # Best-effort revoke for current cookie session.
     cookie = request.cookies.get(SESSION_COOKIE_NAME)
-    # FastAPI Response doesn't expose request; use an explicit cookie delete only.
-    response.delete_cookie(SESSION_COOKIE_NAME, path="/")
+    response.delete_cookie(
+        SESSION_COOKIE_NAME,
+        path="/",
+        samesite=same_site,
+        secure=secure,
+        httponly=True,
+    )
     if not cookie:
         return
     token_hash = hash_session_token(cookie)

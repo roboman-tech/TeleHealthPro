@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -34,6 +35,11 @@ class Settings(BaseSettings):
 
     # Used for telehealth join links (must match Vite dev server or production URL)
     frontend_base_url: str = "http://localhost:5173"
+
+    # When the SPA is on another origin (e.g. Vercel) and the API is on this host, use
+    # SESSION_COOKIE_SAME_SITE=none and SESSION_COOKIE_SECURE=true so browsers send the cookie on fetch().
+    session_cookie_same_site: Literal["lax", "strict", "none"] = "lax"
+    session_cookie_secure: bool = False
 
     # Jitsi Meet base (public cloud or your own deployment, e.g. https://meet.jit.si)
     jitsi_base_url: str = "https://meet.jit.si"

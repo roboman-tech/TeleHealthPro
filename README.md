@@ -85,12 +85,37 @@ Open the URL Vite prints (usually `http://localhost:5173`). Sign in as admin, ap
 
 If you have data in an older schema, see `backend/scripts/migrate_clinical_sqlite.py` (run from `backend` with appropriate paths).
 
+## Split deploy (Vercel frontend + API on your VPS)
+
+Example: SPA on Vercel, API at `https://healthcareapi.culturemind.org`.
+
+### Vercel (frontend)
+
+1. Create a Vercel project from this repo; set **Root Directory** to `frontend`.
+2. Under **Environment Variables** (Production and Preview as needed), set:
+   - `VITE_API_URL` = `https://healthcareapi.culturemind.org` (no trailing slash).
+3. Deploy. `vercel.json` rewrites client-side routes to `index.html`.
+
+### VPS (backend)
+
+1. Point DNS `healthcareapi.culturemind.org` at the server; terminate **HTTPS** (Caddy, nginx + certbot, etc.) and reverse-proxy to Uvicorn (e.g. `127.0.0.1:8000`).
+2. In `backend/.env` on the server:
+   - `CORS_ORIGINS`: JSON list including every SPA origin (e.g. `https://your-app.vercel.app` and a custom domain if you use one).
+   - `FRONTEND_BASE_URL`: the exact public URL of the SPA (used for telehealth join links).
+   - `SESSION_COOKIE_SAME_SITE=none` and `SESSION_COOKIE_SECURE=true` so the HttpOnly session cookie is sent on cross-origin `fetch` from the Vercel site to your API (HTTPS only).
+   - Strong `JWT_SECRET_KEY`, production `DATABASE_URL`, `alembic upgrade head`, and run Uvicorn behind the proxy.
+
+### Cookies and auth
+
+Same-origin dev uses `SameSite=Lax` cookies via the Vite proxy. Split origins require the session cookie settings above; the UI also keeps a JWT fallback in storage when cookies are not available (see `AuthContext`).
+
 ## Configuration
 
 | File | Purpose |
 |------|---------|
-| `backend/.env` | `DATABASE_URL`, `JWT_SECRET_KEY`, `CORS_ORIGINS`, `FRONTEND_BASE_URL`, `JITSI_BASE_URL`, `CLINICAL_SQLITE_PATH`, admin bootstrap vars for `create_admin.py` |
+| `backend/.env` | `DATABASE_URL`, `JWT_SECRET_KEY`, `CORS_ORIGINS`, `FRONTEND_BASE_URL`, `SESSION_COOKIE_*`, `JITSI_BASE_URL`, `CLINICAL_SQLITE_PATH`, admin bootstrap vars for `create_admin.py` |
 | `frontend/.env.local` | Optional `VITE_API_URL`; dev proxy target `VITE_DEV_PROXY_TARGET` if needed |
+| `frontend/.env.example` | Template; on Vercel set `VITE_API_URL` in the dashboard instead of committing secrets |
 
 ## Project layout
 
